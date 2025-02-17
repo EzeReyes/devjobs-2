@@ -32,6 +32,8 @@ app.engine('handlebars',
 );
 
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
+
 
 // statis files
 app.use(express.static(path.join(__dirname, 'public')));
