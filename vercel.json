@@ -17,6 +17,11 @@
       },
       {"src": "/uploads/(.*)",
       "dest": "/public/uploads/$1"
+      },
+      {
+        "rewrites": [
+          { "source": "/api/(.*)", "destination": "/routes/index.js" }
+        ]
       }
     ]
   }
