@@ -37,6 +37,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // statis files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 
 app.use(cookieParser());
 
