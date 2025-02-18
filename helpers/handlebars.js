@@ -15,20 +15,32 @@ module.exports = {
             new RegExp(` value="${seleccionado}"`), '$& selected="selected"'
         )
     },
-    mostrarAlertas: (errores = {}, alertas ) => {
-        const categoria = Object.keys(errores);
-        
+    mostrarAlertas: (errores = {}, alertas) => {
+        console.log("Errores recibidos:", errores);
+    
+        const categorias = Object.keys(errores);
+        console.log("Categorías detectadas:", categorias);
+    
         let html = '';
-        if(categoria.length) {
-            errores[categoria].forEach(error => {
-                html += `<div class="${categoria} alerta">
-                    ${error}
-                </div>;
-                `;
-            })
+        if (categorias.length) {
+            categorias.forEach(categoria => {
+                console.log(`Procesando categoría: ${categoria}`);
+                console.log("Tipo de errores[categoria]:", typeof errores[categoria]);
+                console.log("Contenido de errores[categoria]:", errores[categoria]);
+    
+                // Aseguramos que sea un array
+                const listaErrores = Array.isArray(errores[categoria]) ? errores[categoria] : [errores[categoria]];
+                
+                listaErrores.forEach(error => {
+                    html += `<div class="${categoria} alerta">
+                        ${error}
+                    </div>`;
+                });
+            });
         }
-
+    
         return alertas.fn().html = html;
     }
+    
 
 }
