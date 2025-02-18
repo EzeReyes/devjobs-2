@@ -6,35 +6,45 @@ const shortid = require('shortid');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+// Configuración de Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-
 // Configurar multer con Cloudinary
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
-        folder: 'perfiles', // Carpeta donde se guardarán las imágenes en Cloudinary
-        format: async (req, file) => file.mimetype.split('/')[1], // Formato basado en el tipo de archivo
-        public_id: (req, file) => shortid.generate() // Nombre de archivo único
+        folder: 'perfiles', // Carpeta en Cloudinary
+        format: async (req, file) => file.mimetype.split('/')[1], // Formato de imagen
+        public_id: () => shortid.generate(), // Nombre único para cada archivo
     }
 });
 
-const upload = multer({ storage }).single('imagen');
+const upload = multer({
+    storage,
+    limits: { fileSize: 100000 }, // Límite de 100 KB
+    fileFilter(req, file, cb) {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true);
+        } else {
+            cb(new Error('Formato no válido'), false);
+        }
+    },
+}).single('imagen');
 
 // Middleware para subir la imagen
 exports.subirImagen = (req, res, next) => {
-    upload(req, res, function (error) {
+    upload(req, res, (error) => {
         if (error) {
-            req.flash('error', error.message);
-            return res.redirect('/administracion');
+            return res.status(400).json({ error: error.message });
         }
         next();
     });
 };
+
 
 
 // exports.subirImagen = (req, res, next) => {
