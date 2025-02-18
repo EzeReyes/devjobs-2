@@ -3,52 +3,84 @@ const { body, validationResult } = require('express-validator');
 const Usuarios = require("../models/Usuarios");
 const multer = require('multer');
 const shortid = require('shortid');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 
+// Configurar multer con Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'perfiles', // Carpeta donde se guardarán las imágenes en Cloudinary
+        format: async (req, file) => file.mimetype.split('/')[1], // Formato basado en el tipo de archivo
+        public_id: (req, file) => shortid.generate() // Nombre de archivo único
+    }
+});
+
+const upload = multer({ storage }).single('imagen');
+
+// Middleware para subir la imagen
 exports.subirImagen = (req, res, next) => {
-    upload(req, res, function(error) {
-        if(error) {
-            if(error instanceof multer.MulterError) {
-                if(error.code === 'LIMIT_FILE_SIZE') {
-                    req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
-                } else {
-                    req.flash('error', error.message);
-                }
-            } else {
-                req.flash('error', error.message);
-            }
-            res.redirect('/administracion');
-            return;
-        } else {
-            return next();
+    upload(req, res, function (error) {
+        if (error) {
+            req.flash('error', error.message);
+            return res.redirect('/administracion');
         }
+        next();
     });
-}
+};
 
 
-// Opciones de multer
-const configuracionMulter = {
-    limits: {fileSize : 100000 },
-    storage: fileStorage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, __dirname+'../../public/uploads/perfiles');
-        },
-        filename: (req, file, cb) => {
-            const extension = file.mimetype.split('/') [1];
-            cb(null, `${shortid.generate()}.${extension}`);
-        }
-    }),
-    fileFilter(req, file, cb) {
-        if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-            // el callback se ejecuta como true o false : true cuando la imagen se acepta
-            cb(null, true);
-        } else {
-            cb(new Error('Formato no válido'), false);
-        }
-    },
-}
+// exports.subirImagen = (req, res, next) => {
+//     upload(req, res, function(error) {
+//         if(error) {
+//             if(error instanceof multer.MulterError) {
+//                 if(error.code === 'LIMIT_FILE_SIZE') {
+//                     req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
+//                 } else {
+//                     req.flash('error', error.message);
+//                 }
+//             } else {
+//                 req.flash('error', error.message);
+//             }
+//             res.redirect('/administracion');
+//             return;
+//         } else {
+//             return next();
+//         }
+//     });
+// }
 
-const upload = multer(configuracionMulter).single('imagen');
+
+// // Opciones de multer
+// const configuracionMulter = {
+//     limits: {fileSize : 100000 },
+//     storage: fileStorage = multer.diskStorage({
+//         destination: (req, file, cb) => {
+//             cb(null, __dirname+'../../public/uploads/perfiles');
+//         },
+//         filename: (req, file, cb) => {
+//             const extension = file.mimetype.split('/') [1];
+//             cb(null, `${shortid.generate()}.${extension}`);
+//         }
+//     }),
+//     fileFilter(req, file, cb) {
+//         if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+//             // el callback se ejecuta como true o false : true cuando la imagen se acepta
+//             cb(null, true);
+//         } else {
+//             cb(new Error('Formato no válido'), false);
+//         }
+//     },
+// }
+
+// const upload = multer(configuracionMulter).single('imagen');
 
 exports.formCrearCuenta = (req, res) => {
     res.render('crear-cuenta', {
@@ -125,8 +157,9 @@ exports.editarPerfil = async (req, res) => {
         usuario.password = req.body.password;
     }
 
+
     if (req.file) {
-        usuario.imagen = req.file.filename;
+        usuario.imagen = req.file.path; // La imagen ahora será una URL de Cloudinary
     }
     
     await usuario.save();
