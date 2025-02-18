@@ -15,19 +15,20 @@ module.exports = {
             new RegExp(` value="${seleccionado}"`), '$& selected="selected"'
         )
     },
-    mostrarAlertas: (errores = {}, alertas ) => {
-        const categoria = Object.keys(errores);
+    mostrarAlertas: (errores = {}, alertas) => {
+        const categorias = Object.keys(errores); // <-- Cambia categoria por categorias (plural)
         
         let html = '';
-        if(categoria.length) {
-            errores[categoria].forEach(error => {
-                html += `<div class="${categoria} alerta">
-                    ${error}
-                </div>;
-                `;
-            })
+        if (categorias.length) {
+            categorias.forEach(categoria => { // <-- Itera sobre cada categoría
+                errores[categoria].forEach(error => { // <-- Ahora sí accedes correctamente
+                    html += `<div class="${categoria} alerta">
+                        ${error}
+                    </div>`;
+                });
+            });
         }
-
+    
         return alertas.fn().html = html;
     }
 
