@@ -27,7 +27,7 @@ const upload = multer({
     storage,
     limits: { fileSize: 100000 }, // Límite de 100 KB
     fileFilter(req, file, cb) {
-        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg' ) {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/webp' ) {
             cb(null, true);
         } else {
             cb(new Error('Formato no válido'), false);
