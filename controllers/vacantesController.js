@@ -143,37 +143,38 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
 }
 
 // Subir archivos en PDF
-exports.subirCV = (req, res) => {
-    upload(req, res, function(error) {
-            if(error) {
-                if(error instanceof multer.MulterError) {
-                    if(error.code === 'LIMIT_FILE_SIZE') {
-                        req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
-                    } else {
-                        req.flash('error', error.message);
-                    }
-                } else {
-                    req.flash('error', error.message);
-                }
-                res.location(req.get("Referrer") || "/");
-                return;
-            } else {
-                return next();
-            }
-        });
-};
-
-// Configurar Multer con Cloudinary para archivos PDF
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'documentos', // Carpeta en Cloudinary
-        resource_type: 'pdf', // Para archivos PDF y otros
+        resource_type: 'raw', // Para archivos PDF y otros documentos
         public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
     }
 });
 
-const upload = multer({ storage }).single('cv');
+const upload = multer({
+    storage,
+    limits: { fileSize: 100 * 1024 } // Límite de 100KB
+}).single('cv');
+
+// Subir archivos en PDF
+exports.subirCV = (req, res, next) => {
+    upload(req, res, function (error) {
+        if (error) {
+            if (error instanceof multer.MulterError) {
+                if (error.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande. Máximo 100KB.');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            return res.redirect(req.get("Referrer") || "/");
+        }
+        next(); // Continuar con el siguiente middleware si no hay errores
+    });
+};
 
 
 // exports.subirCV = async (req, res, next) => {
