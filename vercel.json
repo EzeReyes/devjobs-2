@@ -19,7 +19,7 @@
       "dest": "/public/uploads/$1"
       },
       {
-        "src": "/routes/(.*)", 
+        "src": "/(.*)", 
         "dest": "/routes/index.js" 
       }
     ]
