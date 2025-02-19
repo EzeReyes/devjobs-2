@@ -147,6 +147,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'documentos', // Carpeta en Cloudinary
+        resource_type: 'raw', // Para archivos PDF y otros documentos
         format: 'pdf', // Asegura que el archivo tenga formato PDF
         public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
     }
