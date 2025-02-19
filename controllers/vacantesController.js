@@ -233,7 +233,7 @@ exports.contactar = async (req, res, next) => {
     const nuevoCandidato = {
         nombre: req.body.nombre,
         email: req.body.email,
-        cv: req.file.filename
+        cv: req.file.path
     }
 
     // almacenar la vacante
