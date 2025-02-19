@@ -144,12 +144,23 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
 
 // Subir archivos en PDF
 exports.subirCV = (req, res) => {
-    upload(req, res, async (error) => {
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-        res.json({ url: req.file.path }); // Devuelve la URL del PDF en Cloudinary
-    });
+    upload(req, res, function(error) {
+            if(error) {
+                if(error instanceof multer.MulterError) {
+                    if(error.code === 'LIMIT_FILE_SIZE') {
+                        req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
+                    } else {
+                        req.flash('error', error.message);
+                    }
+                } else {
+                    req.flash('error', error.message);
+                }
+                res.location(req.get("Referrer") || "/");
+                return;
+            } else {
+                return next();
+            }
+        });
 };
 
 // Configurar Multer con Cloudinary para archivos PDF
@@ -157,7 +168,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'documentos', // Carpeta en Cloudinary
-        resource_type: 'raw', // Para archivos PDF y otros
+        resource_type: 'pdf', // Para archivos PDF y otros
         public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
     }
 });
