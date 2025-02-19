@@ -3,7 +3,14 @@ const Vacante = mongoose.model('Vacante');
 const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 const shortid = require('shortid');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 exports.formularioNuevaVacante = (req, res) => {
     res.render('nueva-vacante', {
@@ -136,50 +143,72 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
 }
 
 // Subir archivos en PDF
+exports.subirCV = (req, res) => {
+    upload(req, res, async (error) => {
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+        res.json({ url: req.file.path }); // Devuelve la URL del PDF en Cloudinary
+    });
+};
 
-exports.subirCV = async (req, res, next) => {
-    upload(req, res, function(error) {
-            if(error) {
-                if(error instanceof multer.MulterError) {
-                    if(error.code === 'LIMIT_FILE_SIZE') {
-                        req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
-                    } else {
-                        req.flash('error', error.message);
-                    }
-                } else {
-                    req.flash('error', error.message);
-                }
-                res.location(req.get("Referrer") || "/");
-                return;
-            } else {
-                return next();
-            }
-        });
-}
+// Configurar Multer con Cloudinary para archivos PDF
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'documentos', // Carpeta en Cloudinary
+        resource_type: 'raw', // Para archivos PDF y otros
+        public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
+    }
+});
+
+const upload = multer({ storage }).single('cv');
+
+
+// exports.subirCV = async (req, res, next) => {
+//     upload(req, res, function(error) {
+//             if(error) {
+//                 if(error instanceof multer.MulterError) {
+//                     if(error.code === 'LIMIT_FILE_SIZE') {
+//                         req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
+//                     } else {
+//                         req.flash('error', error.message);
+//                     }
+//                 } else {
+//                     req.flash('error', error.message);
+//                 }
+//                 res.location(req.get("Referrer") || "/");
+//                 return;
+//             } else {
+//                 return next();
+//             }
+//         });
+// }
 
 // Opciones de multer
-const configuracionMulter = {
-    limits: {fileSize : 100000 },
-    storage: fileStorage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, __dirname+'../../public/uploads/cv');
-        },
-        filename: (req, file, cb) => {
-            const extension = file.mimetype.split('/') [1];
-            cb(null, `${shortid.generate()}.${extension}`);
-        }
-    }),
-    fileFilter(req, file, cb) {
-        if(file.mimetype === 'application/pdf') {
-            // el callback se ejecuta como true o false : true cuando la imagen se acepta
-            cb(null, true);
-        } else {
-            cb(new Error('Formato no válido'), false);
-        }
-    },
-}
+// const configuracionMulter = {
+//     limits: {fileSize : 100000 },
+//     storage: fileStorage = multer.diskStorage({
+//         destination: (req, file, cb) => {
+//             cb(null, __dirname+'../../public/uploads/cv');
+//         },
+//         filename: (req, file, cb) => {
+//             const extension = file.mimetype.split('/') [1];
+//             cb(null, `${shortid.generate()}.${extension}`);
+//         }
+//     }),
+//     fileFilter(req, file, cb) {
+//         if(file.mimetype === 'application/pdf') {
+//             // el callback se ejecuta como true o false : true cuando la imagen se acepta
+//             cb(null, true);
+//         } else {
+//             cb(new Error('Formato no válido'), false);
+//         }
+//     },
+// }
 
-const upload = multer(configuracionMulter).single('cv');
+
+// const upload = multer(configuracionMulter).single('cv');
 
 // Almacenar los candidatos en la base de datos
 exports.contactar = async (req, res, next) => {
