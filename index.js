@@ -12,10 +12,21 @@ const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const createError = require('http-errors');
 const passport = require('./config/passport');
-
+const cors = require('cors');
 require('dotenv').config({ path: 'variables.env'});
 
 const app = express();
+// Configuración básica de CORS
+app.use(cors());
+
+// O configuración específica
+app.use(cors({
+    origin: 'http://example.com', // Cambia esto por tu dominio
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+})
+)
+
 
 // Habilitar body-parser
 app.use(bodyParser.json());
