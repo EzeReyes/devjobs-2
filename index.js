@@ -21,7 +21,7 @@ app.use(cors());
 
 // O configuración específica
 app.use(cors({
-    origin: 'http://example.com', // Cambia esto por tu dominio
+    origin: 'https://devjobs-2-pv18x1z1p-ezereyes-projects.vercel.app', // Cambia esto por tu dominio
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 })
