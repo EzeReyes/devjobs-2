@@ -377,6 +377,9 @@ trix-toolbar .trix-button--icon-strike {
     .lista-conocimientos li {
         flex: 0 0 calc( 33% - 1rem);
     }
+    .btn-descargar {
+        display: none;
+    }
 }
 @media (min-width:768px) {
     .lista-conocimientos li {
