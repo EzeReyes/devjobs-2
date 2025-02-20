@@ -5,6 +5,7 @@ const multer = require('multer');
 const shortid = require('shortid');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { v4: uuidv4 } = require('uuid');
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -148,8 +149,8 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'documentos',
         resource_type: 'raw',
-        public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
-    }
+        public_id: (req, file) => `${uuidv4()}_${file.originalname.split('.')[0]}` // Usa un UUID y el nombre original    
+        }
 });
 
 
