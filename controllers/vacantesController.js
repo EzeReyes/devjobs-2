@@ -148,6 +148,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'documentos',
         resource_type: 'raw',
+        format: 'pdf',
         public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
     }
 });
