@@ -147,7 +147,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'documentos',
-        resource_type: 'raw',
+        resource_type: 'image',
         public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
     }
 });
