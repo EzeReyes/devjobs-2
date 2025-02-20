@@ -116,6 +116,9 @@ h3 {
     position: relative;
 }
 @media (min-width: 768px) {
+    .ver {
+        display: block;
+    }
     .buscador form {
         flex: 0 0 40%;
     }
@@ -150,6 +153,9 @@ h3 {
 }
 
 @media (min-width:768px) {
+    .ver {
+        display: block;
+    }
     .candidato,
     .vacante {
         display: flex;
