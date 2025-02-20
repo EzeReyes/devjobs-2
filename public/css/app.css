@@ -153,9 +153,6 @@ h3 {
 }
 
 @media (min-width:768px) {
-    .ver {
-        display: block;
-    }
     .candidato,
     .vacante {
         display: flex;
@@ -221,6 +218,9 @@ h3 {
 }
 .contenido-superior {
     margin-bottom: 6rem;
+}
+.ver {
+    display: block;
 }
 @media (min-width:768px){
     .vacante-contenedor {
@@ -377,6 +377,9 @@ trix-toolbar .trix-button--icon-strike {
 }
 .lista-conocimientos  li:hover {
     cursor: pointer;
+}
+.ver {
+    display: block;
 }
 
 @media (min-width:480px) {
