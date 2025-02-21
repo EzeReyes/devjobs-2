@@ -25,6 +25,8 @@
             </div>
         {{/if}}
 
+        
+
         {{#if cerrarSesion}}
             <div class="cerrar-sesion">
                 <p>Hola! {{nombre}}</p>
@@ -34,6 +36,11 @@
                 <a href="/administracion">Administración</a>
                 <a href="/cerrar-sesion">Cerrar sesión</a>
             </div>
+        {{/if}}
+        {{#if iniciarSesion}}
+        <div class="cerrar-sesion">
+            <a href="/iniciar-sesion">Iniciar sesión</a>
+        </div>
         {{/if}}
     </div>
 

@@ -16,7 +16,8 @@ exports.formularioNuevaVacante = (req, res) => {
     res.render('nueva-vacante', {
         nombrePagina: 'Nueva Vacante',
         tagline: 'Llena el formulario y publica tu vacante',
-        cerrarSesion: true,
+        cerrarSesion: req.user ? true : false,
+        iniciarSesion: req.user ? false : true, 
         nombre: req.user.nombre,
         imagen: req.user.imagen
     });
@@ -48,7 +49,7 @@ exports.mostrarVacante = async (req, res, next) => {
     res.render('vacante', {
         vacante,
         nombrePagina: vacante.titulo,
-        barra: true
+        barra: true,
     })
 
 }
@@ -236,7 +237,6 @@ exports.mostrarCandidatos = async (req, res, next) => {
     
     res.render('candidatos', {
         nombrePagina: `Candidatos Vacante - ${vacante.titulo}`,
-        cerrarSesion: true,
         nombre: req.user.nombre,
         imagen: req.user.imagen,
         candidatos: vacante.candidatos
@@ -255,6 +255,7 @@ exports.buscarVacante = async (req, res) => {
     res.render('home', {
         nombrePagina: `Resultados para la búsqueda : ${req.body.q}`,
         barra: true,
+        cerrarSesion: true,
         vacantes
     })
 

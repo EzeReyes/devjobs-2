@@ -5,6 +5,7 @@ const multer = require('multer');
 const shortid = require('shortid');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { cerrarSesion, iniciarSesion } = require('./authController');
 
 // Configuración de Cloudinary
 cloudinary.config({
@@ -44,53 +45,6 @@ exports.subirImagen = (req, res, next) => {
         next();
     });
 };
-
-
-
-// exports.subirImagen = (req, res, next) => {
-//     upload(req, res, function(error) {
-//         if(error) {
-//             if(error instanceof multer.MulterError) {
-//                 if(error.code === 'LIMIT_FILE_SIZE') {
-//                     req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
-//                 } else {
-//                     req.flash('error', error.message);
-//                 }
-//             } else {
-//                 req.flash('error', error.message);
-//             }
-//             res.redirect('/administracion');
-//             return;
-//         } else {
-//             return next();
-//         }
-//     });
-// }
-
-
-// // Opciones de multer
-// const configuracionMulter = {
-//     limits: {fileSize : 100000 },
-//     storage: fileStorage = multer.diskStorage({
-//         destination: (req, file, cb) => {
-//             cb(null, __dirname+'../../public/uploads/perfiles');
-//         },
-//         filename: (req, file, cb) => {
-//             const extension = file.mimetype.split('/') [1];
-//             cb(null, `${shortid.generate()}.${extension}`);
-//         }
-//     }),
-//     fileFilter(req, file, cb) {
-//         if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-//             // el callback se ejecuta como true o false : true cuando la imagen se acepta
-//             cb(null, true);
-//         } else {
-//             cb(new Error('Formato no válido'), false);
-//         }
-//     },
-// }
-
-// const upload = multer(configuracionMulter).single('imagen');
 
 exports.formCrearCuenta = (req, res) => {
     res.render('crear-cuenta', {
@@ -141,7 +95,7 @@ exports.crearUsuario = async (req, res, next) => {
 // formulario para iniciar sesión
 exports.formIniciarSesion = (req, res ) => {
     res.render('iniciar-sesion', {
-        nombrePagina: 'Iniciar Sesión devJobs'
+        nombrePagina: 'Iniciar Sesión devJobs', 
     })
 }
 
