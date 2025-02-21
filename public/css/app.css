@@ -115,6 +115,13 @@ h3 {
     flex:1;
     position: relative;
 }
+
+.img-candidato {
+    height: 100px;
+    width: auto;
+    border-radius: 10px;
+}
+
 @media (min-width: 768px) {
     .ver {
         display: block;

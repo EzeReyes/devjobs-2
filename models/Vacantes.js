@@ -39,7 +39,8 @@ const vacantesSchema = new mongoose.Schema({
     candidatos: [{
         nombre: String,
         email: String,
-        cv: String
+        cv: String,
+        imagen: String
     }],
     autor : {
         type: mongoose.Schema.ObjectId,

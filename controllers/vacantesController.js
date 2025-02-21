@@ -142,105 +142,88 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
     return true;
 }
 
-// Subir archivos en PDF
+// Configurar almacenamiento dinámico en Cloudinary
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: {
-        folder: 'documentos',
-        resource_type: 'raw',
-        format: 'pdf',
-        public_id: (req, file) => file.originalname.split('.')[0] // Usa el nombre original
-    }
+    params: async (req, file) => {
+        if (file.mimetype === 'application/pdf') {
+            return {
+                folder: 'documentos',
+                resource_type: 'raw', // PDF debe ser 'raw'
+                format: 'pdf',
+                public_id: file.originalname.split('.')[0], // Nombre original sin extensión
+            };
+        } else if (['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(file.mimetype)) {
+            return {
+                folder: 'imagenesCandidatos',
+                format: file.mimetype.split('/')[1], // Extrae la extensión de la imagen
+                public_id: shortid.generate(), // Genera un ID único
+            };
+        }
+        throw new Error('Formato de archivo no permitido');
+    },
 });
 
-
+// Configurar `multer` con el `storage`
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 } // Límite de 5MB
-}).single('cv');
+    limits: { fileSize: 5 * 1024 * 1024 }, // Máximo 5MB por archivo
+    fileFilter(req, file, cb) {
+        if (
+            file.mimetype === 'application/pdf' ||
+            ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(file.mimetype)
+        ) {
+            cb(null, true);
+        } else {
+            cb(new Error('Formato de archivo no permitido'), false);
+        }
+    },
+}).fields([
+    { name: 'cv', maxCount: 1 },
+    { name: 'imagen', maxCount: 1 },
+]);
 
-// Subir archivos en PDF
-exports.subirCV = (req, res, next) => {
+// Middleware para subir archivos
+exports.subirArchivos = (req, res, next) => {
     upload(req, res, function (error) {
         if (error) {
             console.error("Error al subir archivo:", error);
-            req.flash('error', error.message);
-            return res.redirect(req.get("Referrer") || "/");
+            return res.status(400).json({ error: error.message });
         }
-        console.log("Archivo subido:", req.file);
         next();
     });
 };
 
-
-
-// exports.subirCV = async (req, res, next) => {
-//     upload(req, res, function(error) {
-//             if(error) {
-//                 if(error instanceof multer.MulterError) {
-//                     if(error.code === 'LIMIT_FILE_SIZE') {
-//                         req.flash('error', 'El archivo es muy grande. Máximo 100kb ');
-//                     } else {
-//                         req.flash('error', error.message);
-//                     }
-//                 } else {
-//                     req.flash('error', error.message);
-//                 }
-//                 res.location(req.get("Referrer") || "/");
-//                 return;
-//             } else {
-//                 return next();
-//             }
-//         });
-// }
-
-// Opciones de multer
-// const configuracionMulter = {
-//     limits: {fileSize : 100000 },
-//     storage: fileStorage = multer.diskStorage({
-//         destination: (req, file, cb) => {
-//             cb(null, __dirname+'../../public/uploads/cv');
-//         },
-//         filename: (req, file, cb) => {
-//             const extension = file.mimetype.split('/') [1];
-//             cb(null, `${shortid.generate()}.${extension}`);
-//         }
-//     }),
-//     fileFilter(req, file, cb) {
-//         if(file.mimetype === 'application/pdf') {
-//             // el callback se ejecuta como true o false : true cuando la imagen se acepta
-//             cb(null, true);
-//         } else {
-//             cb(new Error('Formato no válido'), false);
-//         }
-//     },
-// }
-
-
-// const upload = multer(configuracionMulter).single('cv');
-
-// Almacenar los candidatos en la base de datos
 exports.contactar = async (req, res, next) => {
-    const vacante = await Vacante.findOne({ url : req.params.url });
+    const vacante = await Vacante.findOne({ url: req.params.url });
 
-    // sino existe la vacante
-    if(!vacante) return next();
+    // Si la vacante no existe
+    if (!vacante) return next();
 
-    // todo bien, construir el nuevo objeto
+    // 📌 Verificar qué archivos se subieron
+    console.log("Archivos recibidos:", req.files);
+
+    // Obtener las rutas de los archivos subidos
+    const cvPath = req.files.cv ? req.files.cv[0].path : null;
+    const imagenPath = req.files.imagen ? req.files.imagen[0].path : null;
+
+    // Crear el nuevo candidato
     const nuevoCandidato = {
         nombre: req.body.nombre,
         email: req.body.email,
-        cv: req.file.path
-    }
+        cv: cvPath, // 📌 Se obtiene de req.files.cv
+        imagen: imagenPath // 📌 Se obtiene de req.files.imagen
+    };
 
-    // almacenar la vacante
+    // Guardar el candidato en la vacante
     vacante.candidatos.push(nuevoCandidato);
     await vacante.save();
 
-    // mensaje y redirección
+    // Mensaje y redirección
     req.flash('correcto', 'Se envió tu Curriculum Correctamente');
     res.redirect('/');
-}
+};
+
 
 
 // Mostrar Candidatos

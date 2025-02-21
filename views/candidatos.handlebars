@@ -6,29 +6,16 @@
                 <div class="caja">
                     <p class="etiqueta">Nombre:</p>
                     <p class="nombre">{{nombre}}</p>
+                    <img src="{{imagen}}" class="img-candidato">
                 </div>
-                <div class="caja">
+                <div class="caja" style="margin-right: 20px;">
                     <p class="etiqueta">Email:</p>
                     <p class="nombre">{{email}}</p>
                 </div>
                 <div class="caja">
                     <p>Vista previa</p>
-                    
-                    <!-- Intento de carga con iframe -->
-                    <iframe title="CV Candidato" width="500" height="300" src="{{cv}}"
-                        onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';">
-                    </iframe>
-
-                    <!-- Fallback si el iframe no funciona -->
-                    <div id="fallback" style="display:none;">
-                        <p>No se puede mostrar el PDF, <a href="{{cv}}" target="_blank">haz clic aquí</a> para verlo.</p>
-                    </div>
-
-                    <!-- Botón para ver el CV -->
-                    <a href="{{cv}}" class="btn btn-verde ver" target="_blank" rel="noopener noreferrer">Ver CV</a>
-
-                    <!-- Botón para descargar (oculto en móviles con CSS) -->
-                    <a href="{{cv}}" class="btn btn-verde btn-descargar">Descargar</a>
+                    <iframe title="CV Candidato" width="500" height="300" src="{{cv}}"></iframe>
+                    <a href="{{cv}}" class="btn btn-verde" target="_blank" rel="noopener noreferrer">Ver CV</a>
                 </div>
             </div>
         {{/each}}
