@@ -29,10 +29,12 @@ h2 {
 h3 {
     font-size: 2.8rem;
 }
+
 .contenedor {
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .separador {
     padding-bottom: 2rem;
     padding-top:2rem;
@@ -389,6 +391,47 @@ trix-toolbar .trix-button--icon-strike {
 
 @media (max-width:550px) {
 
+    .nombre-sitio {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cerrar-sesion {
+        margin: 2rem 0;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+    }
+    
+
+    .btn {
+        width: 50%;
+        font-size: 1.8rem;
+        padding: 1.4rem 4rem;
+        border-radius: .6rem;
+        color: white;
+        font-weight: 700;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background-color .3s ease-out;
+        display: block;
+        border:none;
+        margin-bottom: 10px;
+    }
+
+    .contenedor {
+        width: 100%;
+    }
+
+
+
+    .cerrar-sesion img {
+        width: 150px;
+    }
+
         .info-reclutador {
             display: flex;
             flex-direction: column;
@@ -407,12 +450,9 @@ trix-toolbar .trix-button--icon-strike {
         }
 }
 
-@media (min-width:480px) {
 
-    .nombre-sitio {
-        display: flex;
-        flex-direction: column;
-    }
+
+@media (min-width:480px) {
 
     .buscador input[type="text"] {
         background-color: rgba(255,255,255,.1);
@@ -450,16 +490,6 @@ trix-toolbar .trix-button--icon-strike {
         margin-top: 4rem;
     }
 
-    .cerrar-sesion {
-        margin: 2rem 0;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-
     .lista-conocimientos li {
         flex: 0 0 calc( 33% - 1rem);
     }
@@ -470,7 +500,25 @@ trix-toolbar .trix-button--icon-strike {
         display: none;
     }
 }
-@media (min-width:768px) {
+@media (min-width:550px) {
+
+    .cerrar-sesion p, 
+.cerrar-sesion a {
+    text-align: center;
+}
+.cerrar-sesion {
+    margin-top: 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.cerrar-sesion img {
+        width: 80px;
+}
+    
     .lista-conocimientos li {
         flex: 0 0 calc( 25% - 1rem);
     }
@@ -485,6 +533,8 @@ trix-toolbar .trix-button--icon-strike {
         flex: 0 0 calc(30% - 1rem );
     }
 }
+
+
 .enviar-datos h2 {
     font-size: 4rem;
     color: white;
@@ -516,21 +566,7 @@ p.candidatos {
     margin-right: 1rem;
     border-radius: 10%;
 }
-/* .cerrar-sesion p, 
-.cerrar-sesion a {
-    margin:  0 2rem 0 0 ;
-    color: #888;
-}
-.cerrar-sesion {
-    margin-top: 2rem;
-    color: white;
-    display: flex;
-    align-items: center;
-}
 
-.cerrar-sesion img {
-        width: 80px;
-} */
 .botones {
     display: flex;
     justify-content: flex-start;
