@@ -267,9 +267,7 @@ h3 {
     color: white;
     font-size: 1.8rem;
 }
-.enviar-datos form {
 
-}
 
 /** Iniciar Sesión **/
 .default-form {
@@ -390,6 +388,58 @@ trix-toolbar .trix-button--icon-strike {
 }
 
 @media (min-width:480px) {
+
+    .nombre-sitio {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .buscador input[type="text"] {
+        background-color: rgba(255,255,255,.1);
+        width: 70%;
+        border: none;
+        padding: .5rem 4rem .5rem 2rem;
+        height: 5rem;
+        border-radius: 1rem;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .buscador input[type="submit"] {
+        display: block;
+        text-indent: -9999px;
+        height: 30px;
+        width:30px;
+        position: absolute;
+        left: 62%;
+        top: 10px;
+        background-image: url(../img/lupa.png);
+        background-color: transparent;
+        border: none;
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    .datos-reclutador {
+        border-top: 3px solid #272727;
+        padding: 5rem 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 4rem;
+    }
+
+    .cerrar-sesion {
+        margin: 2rem 0;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+
     .lista-conocimientos li {
         flex: 0 0 calc( 33% - 1rem);
     }
@@ -404,15 +454,32 @@ trix-toolbar .trix-button--icon-strike {
     .lista-conocimientos li {
         flex: 0 0 calc( 25% - 1rem);
     }
+
+    
+/** Admin **/
+
+    .enviar-datos {
+        flex: 0 0 calc(70% - 1rem);
+    }
+    .info-reclutador {
+        flex: 0 0 calc(30% - 1rem );
+    }
 }
+.enviar-datos h2 {
+    font-size: 4rem;
+    color: white;
+}
+.enviar-datos p {
+    color: white;
+    font-size: 1.8rem;
+}
+
 @media (min-width:992px) {
     .lista-conocimientos li {
         flex: 0 0 calc( 20% - 1rem);
     }
-}
 
-/** Admin **/
-
+    
 p.candidatos {
     font-weight: 400;
     color: white;
@@ -429,7 +496,7 @@ p.candidatos {
     margin-right: 1rem;
     border-radius: 10%;
 }
-.cerrar-sesion p, 
+/* .cerrar-sesion p, 
 .cerrar-sesion a {
     margin:  0 2rem 0 0 ;
     color: #888;
@@ -440,9 +507,10 @@ p.candidatos {
     display: flex;
     align-items: center;
 }
+
 .cerrar-sesion img {
         width: 80px;
-}
+} */
 .botones {
     display: flex;
     justify-content: flex-start;
@@ -519,23 +587,10 @@ p.candidatos {
     justify-content: space-between;
     margin-top: 4rem;
 }
+
 .datos-reclutador p {
     font-size: 2.4rem;
     color: white;
 }
-@media (min-width:768px){
-    .enviar-datos {
-        flex: 0 0 calc(70% - 1rem);
-    }
-    .info-reclutador {
-        flex: 0 0 calc(30% - 1rem );
-    }
-}
-.enviar-datos h2 {
-    font-size: 4rem;
-    color: white;
-}
-.enviar-datos p {
-    color: white;
-    font-size: 1.8rem;
+
 }
