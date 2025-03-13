@@ -407,8 +407,8 @@ trix-toolbar .trix-button--icon-strike {
     }
     
 
+
     .btn {
-        width: 50%;
         font-size: 1.8rem;
         padding: 1.4rem 4rem;
         border-radius: .6rem;
@@ -448,6 +448,21 @@ trix-toolbar .trix-button--icon-strike {
             width: 90%;
             border-radius: 10%;
         }
+
+        .default-form .campo {
+            gap: 10px;
+            display: flex;
+            flex-direction: column;   
+        }
+        .default-form label {
+            flex:0 0 1px;
+            padding-top: 0;
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+        }   
+
 }
 
 
@@ -532,6 +547,8 @@ trix-toolbar .trix-button--icon-strike {
     .info-reclutador {
         flex: 0 0 calc(30% - 1rem );
     }
+
+
 }
 
 
